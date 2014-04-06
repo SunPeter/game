@@ -1,0 +1,146 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title></title> 
+    <style type="text/css">
+    	*{
+    		padding: 0;
+    		margin: 0;
+    	}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+	var canvas = document.getElementById('canvas');
+	if (canvas.getContext) {
+	    var ctx = canvas.getContext('2d');
+	}
+	canvas.width = 550, canvas.height = 400,canvas.style.border = "solid 1px #ACF";
+
+	ctx.beginPath();
+
+	//drawLine();
+
+	//drawRect();
+
+	//drawText();
+
+	//drawArc();
+
+	//drawGradient();
+
+	//drawShadow();
+
+	drawImage();
+
+	ctx.restore();
+
+	function drawLine () {
+		ctx.moveTo(20,20);
+		ctx.lineTo(100,100);
+		ctx.strokeStyle="#F00";
+		ctx.stroke();
+	}
+
+	function drawRect () {
+		ctx.fillStyle="#ACF";
+		ctx.fillRect(20,20,100,200);
+
+		ctx.strokeStyle="#F00";
+		ctx.strokeRect(20,20,200,200);
+	}
+
+	function drawText () {
+		ctx.font="50px Arial";
+		ctx.textAlign="center";
+		ctx.strokeStyle="#F00";
+		ctx.strokeText("哈哈哈",50,100);
+
+		ctx.fillStyle="#0F0";
+		ctx.fillText("哈哈哈",100,200);
+	}
+
+	function drawArc () {
+		ctx.strokeStyle="#000";
+		ctx.arc(200,200,200,0,Math.PI*2,false);
+		ctx.stroke();
+		ctx.restore();
+		ctx.beginPath();
+
+		ctx.fillStyle="#000";
+		ctx.arc(200,200,100,0,Math.PI*2,false);
+		ctx.fill();
+	}
+
+	function drawGradient () {
+		var lineGradient=ctx.createLinearGradient(0,0,500,400);
+		lineGradient.addColorStop(0,"#F00");
+		lineGradient.addColorStop(0.5,"#0F0");
+		lineGradient.addColorStop(1,"#00F");
+
+		ctx.fillStyle=lineGradient;
+		ctx.fillRect(0,0,550,400);
+	}
+
+	function drawShadow () {
+		ctx.shadowOffsetX=10;
+		ctx.shadowOffsetY=10;
+		ctx.shadowBlur=5;
+		ctx.shadowColor="rgba(0,0,0,0.5)";
+		ctx.fillStyle="#ACF";
+		ctx.fillRect(20,20,100,200);
+	}
+
+	function drawImage () {
+		var image = new Image();
+		image.src="http://172.19.28.50:9001/a.jpg";
+		image.onload=function () {
+
+			if (image.width != canvas.width)
+		        canvas.width = image.width;
+		    if (image.height != canvas.height)
+		        canvas.height = image.height;
+
+		    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			ctx.drawImage(image,0,0);
+
+			var imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+		    // grey (ctx,imgData);
+		    invert(ctx,imgData);
+
+		    var data=canvas.toDataURL();
+		    console.log(data);
+		}
+	}
+
+	function grey (ctx,imgData) {
+		for(var i=0;i<imgData.data.length;i+=4){
+			var red=imgData.data[i],
+				green=imgData.data[i+1],
+				blue=imgData.data[i+2],
+				olpha=imgData.data[i+3];
+			var average=Math.floor((red+green+blue)/3);
+			red=green=blue=average;
+			imgData.data[i]=red,
+			imgData.data[i+1]=green,
+			imgData.data[i+2]=blue;
+		}
+		ctx.putImageData(imgData,0,0);
+	}
+
+	function invert(ctx,imgData) {
+		var len=imgData.data.length;
+		for(var i=0;i<len;i+=4){
+			imgData.data[i]=255-imgData.data[i];
+			imgData.data[i+1]=255-imgData.data[i+1];
+			imgData.data[i+2]=255-imgData.data[i+2];
+		}
+		ctx.putImageData(imgData,0,0);
+	}
+</script>
+</html>
+
