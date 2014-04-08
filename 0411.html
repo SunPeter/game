@@ -1,0 +1,44 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title></title> 
+    <script type="text/javascript" src="animation.js"></script>
+    <style type="text/css">
+    	*{
+    		padding: 0;
+    		margin: 0;
+    	}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+	
+	window.onload=function() {
+		var animation=new Animation("canvas");
+		var canvas=animation.getCanvas();
+		canvas.width=600,canvas.height=600,canvas.style.border="1px solid #FAC";
+
+		var	context=animation.getContext();
+
+		var length=200,radius=100;
+		animation.setDrawStage(function(){
+			this.clear();
+			var angular=Math.PI/4*Math.sin(this.getTime()/500)+Math.PI*2;
+			var translateX=length*Math.sin(angular);
+			var translateY=length*Math.cos(angular);
+			context.beginPath();
+			context.save();
+			context.translate(canvas.width/2+translateX,canvas.height/2+translateY);
+			context.arc(0,0,radius,0,Math.PI*2,false);
+			context.restore();
+			context.fillStyle = "#8ED6FF";
+            context.fill();
+
+		});
+		animation.start();
+	}
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title></title> 
+    <script type="text/javascript" src="animation.js"></script>
+    <style type="text/css">
+    	*{
+    		padding: 0;
+    		margin: 0;
+    	}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+	
+	window.onload=function() {
+		var acceleration=2,speedVy=0,distance=0;
+		var animation=new Animation("canvas");
+		var canvas=animation.getCanvas();
+		var box={
+			x:0,
+			y:canvas.height/2-50,
+			width:100,
+			height:100
+		}
+		canvas.width=600,canvas.height=400,canvas.style.border="1px solid #FAC";
+		var	context=animation.getContext();
+		animation.setDrawStage(function(){
+			var addSpeed=acceleration*this.getTimeInterval()/1000;
+			speedVy+=addSpeed;
+			distance+=speedVy*this.getTimeInterval();
+			if(box.x<canvas.width-box.width){
+				box.x+=distance;
+			}
+			else{
+				this.stop();
+			}
+			this.clear();
+			context.beginPath();
+			context.fillStyle="#F00";
+			context.fillRect(box.x,box.y,box.width,box.height);
+		});
+		animation.start();
+	}
+</script>
+</html>

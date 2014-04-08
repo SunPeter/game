@@ -1,0 +1,55 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title></title> 
+    <script type="text/javascript" src="animation.js"></script>
+    <style type="text/css">
+    	*{
+    		padding: 0;
+    		margin: 0;
+    	}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
+	
+	window.onload=function() {
+		var animation=new Animation("canvas");
+		var canvas=animation.getCanvas();
+		canvas.width=600,canvas.height=600,canvas.style.border="1px solid #FAC";
+
+		var	context=animation.getContext();
+
+		var ball={
+			radius:30,
+			x:0,
+			y:0,
+			vX:600,
+			vY:-900,
+			background:"#ACF"
+		}
+		animation.setDrawStage(function(){
+			this.clear();
+			drawBall(this,ball);
+		});
+		animation.start();
+	}
+
+	function drawBall(anim,ball){
+		var gravity=1500,collisionDamper=0.8,floorFriction=100;
+		var context=anim.getContext(),canvas=anim.getCanvas();
+		var time=anim.getTimeInterval();
+		ball.vY+=gravity*time/1000;
+		ball.y+=ball.vy*time/1000;
+		if(ball.y+ball.radius>canvas.height){
+			ball.y*=-1;
+		}
+		context.fillStyle="#A00";
+		context.arc(ball.x,ball.y,ball.radius,0,Math.PI*2,false);
+		context.fill();
+	}
+</script>
+</html>
