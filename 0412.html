@@ -24,32 +24,56 @@
 		var	context=animation.getContext();
 
 		var ball={
-			radius:30,
-			x:0,
-			y:0,
+			radius:10,
+			x:canvas.width/2,
+			y:canvas.height/2,
 			vX:600,
-			vY:-900,
+			vY:-2000,
 			background:"#ACF"
 		}
 		animation.setDrawStage(function(){
 			this.clear();
 			drawBall(this,ball);
+			context.beginPath();
+			context.save();
+			context.fillStyle="#F00";
+			context.arc(ball.x,ball.y,ball.radius,0,Math.PI*2,false);
+			context.fill();
+			context.restore();
 		});
 		animation.start();
 	}
 
 	function drawBall(anim,ball){
 		var gravity=1500,collisionDamper=0.8,floorFriction=100;
-		var context=anim.getContext(),canvas=anim.getCanvas();
 		var time=anim.getTimeInterval();
 		ball.vY+=gravity*time/1000;
-		ball.y+=ball.vy*time/1000;
-		if(ball.y+ball.radius>canvas.height){
-			ball.y*=-1;
+		ball.y+=ball.vY*time/1000;
+
+		ball.x+=ball.vX*time/1000;
+		if(ball.y+ball.radius>=canvas.height){
+			ball.y=canvas.height-ball.radius;//切记：否则有bug
+			ball.vY*=-1;
+			ball.vY*=collisionDamper;
 		}
-		context.fillStyle="#A00";
-		context.arc(ball.x,ball.y,ball.radius,0,Math.PI*2,false);
-		context.fill();
+		if(ball.y<=0){
+			ball.y=ball.radius;
+			ball.vY*=-1;
+			ball.vY*=collisionDamper;
+		}
+
+		if(ball.x+ball.radius>=canvas.width){
+			ball.x=canvas.width-ball.radius;
+			ball.vX*=-1;
+			ball.vX*=collisionDamper;
+		}
+
+		if(ball.x<=ball.radius){
+			ball.x=ball.radius;
+			ball.vX*=-1;
+			ball.vX*=collisionDamper;
+		}
+
 	}
 </script>
 </html>
